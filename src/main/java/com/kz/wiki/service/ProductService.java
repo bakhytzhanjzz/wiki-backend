@@ -13,7 +13,9 @@ public interface ProductService {
     List<Product> search(String searchTerm, String tenantId);
     void delete(Long id, String tenantId);
     boolean existsBySku(String sku, String tenantId);
+    List<Product> filterByStatus(List<Product> products, String status);
 }
+
 
 
 

@@ -32,6 +32,10 @@ public class ProductController {
         product.setSku(request.getSku());
         product.setPrice(request.getPrice());
         product.setStockQty(request.getStockQty());
+        product.setBarcode(request.getBarcode());
+        product.setSupplierId(request.getSupplierId());
+        product.setUnit(request.getUnit());
+        product.setDescription(request.getDescription());
         
         if (request.getCategoryId() != null) {
             Category category = new Category();
@@ -47,7 +51,8 @@ public class ProductController {
     @GetMapping
     public ResponseEntity<ApiResponse<List<Product>>> getAllProducts(
             @RequestParam(required = false) String search,
-            @RequestParam(required = false) Long categoryId) {
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) String status) {
         String tenantId = SecurityUtil.getCurrentTenantId();
         
         List<Product> products;
@@ -57,6 +62,11 @@ public class ProductController {
             products = productService.findByCategory(categoryId, tenantId);
         } else {
             products = productService.findAll(tenantId);
+        }
+        
+        // Filter by status if provided
+        if (status != null && !status.trim().isEmpty()) {
+            products = productService.filterByStatus(products, status.trim());
         }
         
         return ResponseEntity.ok(ApiResponse.success(products));
@@ -82,6 +92,10 @@ public class ProductController {
         product.setName(request.getName());
         product.setSku(request.getSku());
         product.setPrice(request.getPrice());
+        product.setBarcode(request.getBarcode());
+        product.setSupplierId(request.getSupplierId());
+        product.setUnit(request.getUnit());
+        product.setDescription(request.getDescription());
         
         if (request.getCategoryId() != null) {
             Category category = new Category();

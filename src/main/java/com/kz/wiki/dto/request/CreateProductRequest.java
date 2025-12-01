@@ -26,6 +26,14 @@ public class CreateProductRequest {
     private Integer stockQty = 0;
 
     private Long categoryId;
+
+    private String barcode;
+
+    private Long supplierId;
+
+    private String unit;
+
+    private String description;
 }
 
 

@@ -30,4 +30,14 @@ public class Product extends BaseTenantEntity {
     @JoinColumn(name = "category_id")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Category category;
+
+    private String barcode;
+
+    @Column(name = "supplier_id")
+    private Long supplierId;
+
+    private String unit;
+
+    @Column(columnDefinition = "TEXT")
+    private String description;
 }

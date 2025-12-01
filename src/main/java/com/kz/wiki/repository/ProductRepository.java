@@ -19,6 +19,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     
     @Query("SELECT p FROM Product p WHERE p.tenantId = :tenantId AND " +
            "(LOWER(p.name) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
-           "LOWER(p.sku) LIKE LOWER(CONCAT('%', :searchTerm, '%')))")
+           "LOWER(p.sku) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
+           "LOWER(p.barcode) LIKE LOWER(CONCAT('%', :searchTerm, '%')))")
     List<Product> searchByTenantId(@Param("tenantId") String tenantId, @Param("searchTerm") String searchTerm);
 }

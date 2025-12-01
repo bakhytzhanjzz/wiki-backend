@@ -70,6 +70,10 @@ public class ProductServiceImpl implements ProductService {
         existing.setSku(product.getSku());
         existing.setPrice(product.getPrice());
         existing.setCategory(product.getCategory());
+        existing.setBarcode(product.getBarcode());
+        existing.setSupplierId(product.getSupplierId());
+        existing.setUnit(product.getUnit());
+        existing.setDescription(product.getDescription());
         // Note: stockQty should be updated via StockService, not directly here
 
         Product updated = productRepository.save(existing);
@@ -122,6 +126,22 @@ public class ProductServiceImpl implements ProductService {
     @Transactional(readOnly = true)
     public boolean existsBySku(String sku, String tenantId) {
         return productRepository.existsBySkuAndTenantId(sku, tenantId);
+    }
+
+    @Override
+    public List<Product> filterByStatus(List<Product> products, String status) {
+        return products.stream()
+                .filter(product -> {
+                    int stock = product.getStockQty() != null ? product.getStockQty() : 0;
+                    return switch (status.toLowerCase()) {
+                        case "active" -> stock > 0;
+                        case "inactive" -> stock == 0;
+                        case "low" -> stock > 0 && stock < 10;
+                        case "zero" -> stock == 0;
+                        default -> true;
+                    };
+                })
+                .toList();
     }
 }
 
