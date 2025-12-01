@@ -32,6 +32,8 @@ SPRING_PROFILES_ACTIVE=prod
 JWT_SECRET=generate-a-random-32-character-string-here
 ```
 
+**Important**: Railway automatically provides `DATABASE_URL` when you add PostgreSQL database. Make sure the database service is connected to your backend service (Railway does this automatically).
+
 **Generate JWT Secret:**
 ```bash
 # On Linux/Mac
