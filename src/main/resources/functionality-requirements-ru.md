@@ -362,3 +362,46 @@ Wiki — это многопользовательская система упр
 - Все денежные значения используют точность BigDecimal (2 знака после запятой)
 
 ---
+
+## Справочник API Endpoints
+
+### Аутентификация
+- `POST /api/auth/register` - Регистрация нового пользователя и компании
+- `POST /api/auth/login` - Вход пользователя
+- `POST /api/auth/refresh` - Обновление токена доступа
+
+### Категории
+- `POST /api/categories` - Создать категорию
+- `GET /api/categories` - Получить все категории
+- `GET /api/categories/{id}` - Получить категорию по ID
+- `PUT /api/categories/{id}` - Обновить категорию
+- `DELETE /api/categories/{id}` - Удалить категорию
+
+### Товары
+- `POST /api/products` - Создать товар
+- `GET /api/products` - Получить все товары (с опциональными параметрами `search` и `categoryId`)
+- `GET /api/products/{id}` - Получить товар по ID
+- `PUT /api/products/{id}` - Обновить товар
+- `DELETE /api/products/{id}` - Удалить товар
+- `GET /api/products/sku/{sku}/exists` - Проверить существование артикула
+
+### Продажи
+- `POST /api/sales` - Создать продажу
+- `POST /api/sales/{id}/return` - Обработать возврат
+- `GET /api/sales` - Получить все продажи (с опциональными параметрами `startDate` и `endDate`)
+- `GET /api/sales/{id}` - Получить продажу по ID
+
+### Склад
+- `POST /api/stock/receipt` - Записать поступление на склад
+- `POST /api/stock/write-off` - Записать списание со склада
+- `GET /api/stock/product/{productId}/history` - Получить историю остатков товара
+- `GET /api/stock/product/{productId}/current` - Получить текущий уровень остатка
+
+### Аналитика
+- `GET /api/analytics/daily/revenue` - Получить дневную выручку (опциональный параметр `date`)
+- `GET /api/analytics/daily/sales-count` - Получить количество продаж за день (опциональный параметр `date`)
+- `GET /api/analytics/revenue` - Получить выручку за диапазон дат (обязательные параметры `startDate`, `endDate`)
+- `GET /api/analytics/sales-count` - Получить количество продаж за диапазон дат (обязательные параметры `startDate`, `endDate`)
+- `GET /api/analytics/dashboard` - Получить полные данные панели управления (опциональный параметр `date`)
+
+---

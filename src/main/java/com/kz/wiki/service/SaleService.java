@@ -13,3 +13,4 @@ public interface SaleService {
     List<Sale> findByDateRange(LocalDate startDate, LocalDate endDate, String tenantId);
 }
 
+

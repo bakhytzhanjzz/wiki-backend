@@ -24,3 +24,4 @@ public class CreateProductRequest {
     private Long categoryId;
 }
 
+

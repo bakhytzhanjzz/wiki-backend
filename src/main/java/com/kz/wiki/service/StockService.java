@@ -10,3 +10,4 @@ public interface StockService {
     Integer getCurrentStock(Long productId, String tenantId);
 }
 
+

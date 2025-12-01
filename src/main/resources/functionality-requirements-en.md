@@ -362,3 +362,46 @@ Wiki is a multi-tenant inventory management and point-of-sale system for small a
 - All monetary values use BigDecimal precision (2 decimal places)
 
 ---
+
+## API Endpoints Reference
+
+### Authentication
+- `POST /api/auth/register` - Register new user and company
+- `POST /api/auth/login` - User login
+- `POST /api/auth/refresh` - Refresh access token
+
+### Categories
+- `POST /api/categories` - Create category
+- `GET /api/categories` - Get all categories
+- `GET /api/categories/{id}` - Get category by ID
+- `PUT /api/categories/{id}` - Update category
+- `DELETE /api/categories/{id}` - Delete category
+
+### Products
+- `POST /api/products` - Create product
+- `GET /api/products` - Get all products (with optional `search` and `categoryId` query params)
+- `GET /api/products/{id}` - Get product by ID
+- `PUT /api/products/{id}` - Update product
+- `DELETE /api/products/{id}` - Delete product
+- `GET /api/products/sku/{sku}/exists` - Check if SKU exists
+
+### Sales
+- `POST /api/sales` - Create sale
+- `POST /api/sales/{id}/return` - Process return
+- `GET /api/sales` - Get all sales (with optional `startDate` and `endDate` query params)
+- `GET /api/sales/{id}` - Get sale by ID
+
+### Stock
+- `POST /api/stock/receipt` - Record stock receipt
+- `POST /api/stock/write-off` - Record stock write-off
+- `GET /api/stock/product/{productId}/history` - Get product stock history
+- `GET /api/stock/product/{productId}/current` - Get current stock level
+
+### Analytics
+- `GET /api/analytics/daily/revenue` - Get daily revenue (optional `date` query param)
+- `GET /api/analytics/daily/sales-count` - Get daily sales count (optional `date` query param)
+- `GET /api/analytics/revenue` - Get revenue by date range (`startDate`, `endDate` required)
+- `GET /api/analytics/sales-count` - Get sales count by date range (`startDate`, `endDate` required)
+- `GET /api/analytics/dashboard` - Get complete dashboard data (optional `date` query param)
+
+---

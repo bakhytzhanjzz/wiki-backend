@@ -1,0 +1,639 @@
+{
+	"info": {
+		"_postman_id": "wiki-api-collection",
+		"name": "Wiki Inventory & POS API",
+		"description": "Complete API collection for Wiki Inventory & POS System",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{access_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8081/api",
+			"type": "string"
+		},
+		{
+			"key": "access_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "refresh_token",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register User",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"owner@example.com\",\n  \"password\": \"password123\",\n  \"fullName\": \"John Doe\",\n  \"companyName\": \"My Store\",\n  \"role\": \"OWNER\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/register",
+							"host": ["{{base_url}}"],
+							"path": ["auth", "register"]
+						}
+					}
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData.data && jsonData.data.accessToken) {",
+									"        pm.environment.set('access_token', jsonData.data.accessToken);",
+									"        pm.environment.set('refresh_token', jsonData.data.refreshToken);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"owner@example.com\",\n  \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/login",
+							"host": ["{{base_url}}"],
+							"path": ["auth", "login"]
+						}
+					}
+				},
+				{
+					"name": "Refresh Token",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"refreshToken\": \"{{refresh_token}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/refresh",
+							"host": ["{{base_url}}"],
+							"path": ["auth", "refresh"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "Create Product",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Laptop Computer\",\n  \"sku\": \"LAP-001\",\n  \"price\": 999.99,\n  \"stockQty\": 50,\n  \"categoryId\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/products",
+							"host": ["{{base_url}}"],
+							"path": ["products"]
+						}
+					}
+				},
+				{
+					"name": "Get All Products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/products",
+							"host": ["{{base_url}}"],
+							"path": ["products"]
+						}
+					}
+				},
+				{
+					"name": "Get All Products (Search)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/products?search=laptop",
+							"host": ["{{base_url}}"],
+							"path": ["products"],
+							"query": [
+								{
+									"key": "search",
+									"value": "laptop"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get All Products (By Category)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/products?categoryId=1",
+							"host": ["{{base_url}}"],
+							"path": ["products"],
+							"query": [
+								{
+									"key": "categoryId",
+									"value": "1"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Product by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/products/1",
+							"host": ["{{base_url}}"],
+							"path": ["products", "1"]
+						}
+					}
+				},
+				{
+					"name": "Update Product",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Updated Laptop Computer\",\n  \"sku\": \"LAP-001\",\n  \"price\": 899.99,\n  \"categoryId\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/products/1",
+							"host": ["{{base_url}}"],
+							"path": ["products", "1"]
+						}
+					}
+				},
+				{
+					"name": "Delete Product",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/products/1",
+							"host": ["{{base_url}}"],
+							"path": ["products", "1"]
+						}
+					}
+				},
+				{
+					"name": "Check SKU Exists",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/products/sku/LAP-001/exists",
+							"host": ["{{base_url}}"],
+							"path": ["products", "sku", "LAP-001", "exists"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Categories",
+			"item": [
+				{
+					"name": "Create Category",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Electronics\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/categories",
+							"host": ["{{base_url}}"],
+							"path": ["categories"]
+						}
+					}
+				},
+				{
+					"name": "Get All Categories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/categories",
+							"host": ["{{base_url}}"],
+							"path": ["categories"]
+						}
+					}
+				},
+				{
+					"name": "Get Category by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/categories/1",
+							"host": ["{{base_url}}"],
+							"path": ["categories", "1"]
+						}
+					}
+				},
+				{
+					"name": "Update Category",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Updated Electronics\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/categories/1",
+							"host": ["{{base_url}}"],
+							"path": ["categories", "1"]
+						}
+					}
+				},
+				{
+					"name": "Delete Category",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/categories/1",
+							"host": ["{{base_url}}"],
+							"path": ["categories", "1"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Sales",
+			"item": [
+				{
+					"name": "Create Sale",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"items\": [\n    {\n      \"productId\": 1,\n      \"quantity\": 2\n    },\n    {\n      \"productId\": 3,\n      \"quantity\": 1\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/sales",
+							"host": ["{{base_url}}"],
+							"path": ["sales"]
+						}
+					}
+				},
+				{
+					"name": "Create Return",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/sales/1/return",
+							"host": ["{{base_url}}"],
+							"path": ["sales", "1", "return"]
+						}
+					}
+				},
+				{
+					"name": "Get All Sales",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/sales",
+							"host": ["{{base_url}}"],
+							"path": ["sales"]
+						}
+					}
+				},
+				{
+					"name": "Get All Sales (Date Range)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/sales?startDate=2024-01-01&endDate=2024-01-31",
+							"host": ["{{base_url}}"],
+							"path": ["sales"],
+							"query": [
+								{
+									"key": "startDate",
+									"value": "2024-01-01"
+								},
+								{
+									"key": "endDate",
+									"value": "2024-01-31"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Sale by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/sales/1",
+							"host": ["{{base_url}}"],
+							"path": ["sales", "1"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Stock",
+			"item": [
+				{
+					"name": "Record Stock Receipt",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"productId\": 1,\n  \"quantity\": 100,\n  \"reason\": \"New shipment received\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/stock/receipt",
+							"host": ["{{base_url}}"],
+							"path": ["stock", "receipt"]
+						}
+					}
+				},
+				{
+					"name": "Record Stock Write-Off",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"productId\": 1,\n  \"quantity\": 5,\n  \"reason\": \"Damaged goods\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/stock/write-off",
+							"host": ["{{base_url}}"],
+							"path": ["stock", "write-off"]
+						}
+					}
+				},
+				{
+					"name": "Get Product Stock History",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/stock/product/1/history",
+							"host": ["{{base_url}}"],
+							"path": ["stock", "product", "1", "history"]
+						}
+					}
+				},
+				{
+					"name": "Get Current Stock",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/stock/product/1/current",
+							"host": ["{{base_url}}"],
+							"path": ["stock", "product", "1", "current"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Analytics",
+			"item": [
+				{
+					"name": "Get Daily Revenue",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/analytics/daily/revenue",
+							"host": ["{{base_url}}"],
+							"path": ["analytics", "daily", "revenue"]
+						}
+					}
+				},
+				{
+					"name": "Get Daily Revenue (Specific Date)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/analytics/daily/revenue?date=2024-01-15",
+							"host": ["{{base_url}}"],
+							"path": ["analytics", "daily", "revenue"],
+							"query": [
+								{
+									"key": "date",
+									"value": "2024-01-15"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Daily Sales Count",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/analytics/daily/sales-count",
+							"host": ["{{base_url}}"],
+							"path": ["analytics", "daily", "sales-count"]
+						}
+					}
+				},
+				{
+					"name": "Get Daily Sales Count (Specific Date)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/analytics/daily/sales-count?date=2024-01-15",
+							"host": ["{{base_url}}"],
+							"path": ["analytics", "daily", "sales-count"],
+							"query": [
+								{
+									"key": "date",
+									"value": "2024-01-15"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Revenue by Date Range",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/analytics/revenue?startDate=2024-01-01&endDate=2024-01-31",
+							"host": ["{{base_url}}"],
+							"path": ["analytics", "revenue"],
+							"query": [
+								{
+									"key": "startDate",
+									"value": "2024-01-01"
+								},
+								{
+									"key": "endDate",
+									"value": "2024-01-31"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Sales Count by Date Range",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/analytics/sales-count?startDate=2024-01-01&endDate=2024-01-31",
+							"host": ["{{base_url}}"],
+							"path": ["analytics", "sales-count"],
+							"query": [
+								{
+									"key": "startDate",
+									"value": "2024-01-01"
+								},
+								{
+									"key": "endDate",
+									"value": "2024-01-31"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Dashboard Data",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/analytics/dashboard",
+							"host": ["{{base_url}}"],
+							"path": ["analytics", "dashboard"]
+						}
+					}
+				},
+				{
+					"name": "Get Dashboard Data (Specific Date)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/analytics/dashboard?date=2024-01-15",
+							"host": ["{{base_url}}"],
+							"path": ["analytics", "dashboard"],
+							"query": [
+								{
+									"key": "date",
+									"value": "2024-01-15"
+								}
+							]
+						}
+					}
+				}
+			]
+		}
+	]
+}

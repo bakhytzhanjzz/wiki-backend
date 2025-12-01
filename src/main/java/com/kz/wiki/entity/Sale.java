@@ -1,5 +1,6 @@
 package com.kz.wiki.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,5 +30,6 @@ public class Sale extends BaseTenantEntity {
     private Long createdBy; // user.id
 
     @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<SaleItem> items = new ArrayList<>();
 }

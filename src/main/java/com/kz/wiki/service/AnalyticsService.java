@@ -10,3 +10,4 @@ public interface AnalyticsService {
     Long getSalesCountByDateRange(LocalDate startDate, LocalDate endDate, String tenantId);
 }
 
+

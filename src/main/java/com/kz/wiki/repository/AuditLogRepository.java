@@ -12,3 +12,4 @@ public interface AuditLogRepository extends JpaRepository<AuditLog, Long> {
     List<AuditLog> findByTenantIdAndUserId(String tenantId, Long userId);
 }
 
+
