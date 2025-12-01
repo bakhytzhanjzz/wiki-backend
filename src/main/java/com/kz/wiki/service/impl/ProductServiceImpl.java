@@ -1,5 +1,6 @@
 package com.kz.wiki.service.impl;
 
+import com.kz.wiki.annotation.AuditLoggable;
 import com.kz.wiki.entity.Product;
 import com.kz.wiki.exception.BadRequestException;
 import com.kz.wiki.exception.ResourceNotFoundException;
@@ -23,6 +24,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
+    @AuditLoggable(action = "CREATE_PRODUCT", entityType = "PRODUCT")
     public Product create(Product product, String tenantId) {
         // Validate SKU uniqueness
         if (productRepository.existsBySkuAndTenantId(product.getSku(), tenantId)) {
@@ -46,6 +48,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
+    @AuditLoggable(action = "UPDATE_PRODUCT", entityType = "PRODUCT")
     public Product update(Long id, Product product, String tenantId) {
         Product existing = productRepository.findByIdAndTenantId(id, tenantId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product", "id", id));
@@ -106,6 +109,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
+    @AuditLoggable(action = "DELETE_PRODUCT", entityType = "PRODUCT")
     public void delete(Long id, String tenantId) {
         Product product = productRepository.findByIdAndTenantId(id, tenantId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product", "id", id));

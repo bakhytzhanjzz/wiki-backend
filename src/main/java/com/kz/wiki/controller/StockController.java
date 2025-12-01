@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public class StockController {
     private final StockService stockService;
 
     @PostMapping("/receipt")
+    @PreAuthorize("hasAnyRole('OWNER', 'ADMIN')")
     public ResponseEntity<ApiResponse<StockTransaction>> recordReceipt(
             @Valid @RequestBody StockTransactionRequest request) {
         String tenantId = SecurityUtil.getCurrentTenantId();
@@ -39,6 +41,7 @@ public class StockController {
     }
 
     @PostMapping("/write-off")
+    @PreAuthorize("hasAnyRole('OWNER', 'ADMIN')")
     public ResponseEntity<ApiResponse<StockTransaction>> recordWriteOff(
             @Valid @RequestBody StockTransactionRequest request) {
         String tenantId = SecurityUtil.getCurrentTenantId();
@@ -57,6 +60,7 @@ public class StockController {
     }
 
     @GetMapping("/product/{productId}/history")
+    @PreAuthorize("hasAnyRole('OWNER', 'ADMIN')")
     public ResponseEntity<ApiResponse<List<StockTransaction>>> getProductHistory(@PathVariable Long productId) {
         String tenantId = SecurityUtil.getCurrentTenantId();
         List<StockTransaction> history = stockService.getProductHistory(productId, tenantId);

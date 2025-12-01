@@ -1,5 +1,6 @@
 package com.kz.wiki.service.impl;
 
+import com.kz.wiki.annotation.AuditLoggable;
 import com.kz.wiki.entity.Product;
 import com.kz.wiki.entity.Sale;
 import com.kz.wiki.entity.SaleItem;
@@ -30,6 +31,7 @@ public class SaleServiceImpl implements SaleService {
 
     @Override
     @Transactional
+    @AuditLoggable(action = "CREATE_SALE", entityType = "SALE")
     public Sale createSale(Sale sale, String tenantId, Long userId) {
         if (sale.getItems() == null || sale.getItems().isEmpty()) {
             throw new BadRequestException("Sale must have at least one item");
@@ -87,6 +89,7 @@ public class SaleServiceImpl implements SaleService {
 
     @Override
     @Transactional
+    @AuditLoggable(action = "CREATE_RETURN", entityType = "SALE")
     public Sale createReturn(Long saleId, String tenantId, Long userId) {
         Sale originalSale = saleRepository.findByIdAndTenantId(saleId, tenantId)
                 .orElseThrow(() -> new ResourceNotFoundException("Sale", "id", saleId));

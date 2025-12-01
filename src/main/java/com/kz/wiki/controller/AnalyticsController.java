@@ -6,6 +6,7 @@ import com.kz.wiki.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -14,6 +15,7 @@ import java.time.LocalDate;
 @RestController
 @RequestMapping("/api/analytics")
 @RequiredArgsConstructor
+@PreAuthorize("hasAnyRole('OWNER', 'ADMIN')")
 public class AnalyticsController {
 
     private final AnalyticsService analyticsService;

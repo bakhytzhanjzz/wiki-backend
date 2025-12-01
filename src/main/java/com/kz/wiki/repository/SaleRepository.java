@@ -2,6 +2,7 @@ package com.kz.wiki.repository;
 
 import com.kz.wiki.entity.Sale;
 import com.kz.wiki.entity.SaleType;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,6 +15,8 @@ import java.util.Optional;
 @Repository
 public interface SaleRepository extends JpaRepository<Sale, Long> {
     List<Sale> findByTenantId(String tenantId);
+    
+    @EntityGraph(attributePaths = {"items", "items.product", "items.product.category"})
     Optional<Sale> findByIdAndTenantId(Long id, String tenantId);
     
     @Query("SELECT s FROM Sale s WHERE s.tenantId = :tenantId AND " +

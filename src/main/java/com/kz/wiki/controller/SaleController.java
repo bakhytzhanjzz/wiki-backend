@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -45,6 +46,7 @@ public class SaleController {
     }
 
     @PostMapping("/{id}/return")
+    @PreAuthorize("hasAnyRole('OWNER', 'ADMIN', 'SELLER')")
     public ResponseEntity<ApiResponse<Sale>> createReturn(@PathVariable Long id) {
         String tenantId = SecurityUtil.getCurrentTenantId();
         Long userId = SecurityUtil.getCurrentUserId();
@@ -55,6 +57,7 @@ public class SaleController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('OWNER', 'ADMIN')")
     public ResponseEntity<ApiResponse<List<Sale>>> getAllSales(
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
@@ -71,6 +74,7 @@ public class SaleController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('OWNER', 'ADMIN')")
     public ResponseEntity<ApiResponse<Sale>> getSale(@PathVariable Long id) {
         String tenantId = SecurityUtil.getCurrentTenantId();
         return saleService.findById(id, tenantId)

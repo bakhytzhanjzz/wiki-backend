@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: wiki-backend
+    env: java
+    buildCommand: ./mvnw clean package -DskipTests
+    startCommand: java -jar target/wiki-0.0.1-SNAPSHOT.jar --spring.profiles.active=prod
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: PORT
+        value: 10000
+      - key: JWT_SECRET
+        generateValue: true
+    healthCheckPath: /actuator/health
+
+databases:
+  - name: wiki-db
+    plan: free
+    databaseName: wiki
+    user: wiki_user
+

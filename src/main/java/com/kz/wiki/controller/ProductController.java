@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class ProductController {
     private final ProductService productService;
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('OWNER', 'ADMIN')")
     public ResponseEntity<ApiResponse<Product>> createProduct(@Valid @RequestBody CreateProductRequest request) {
         String tenantId = SecurityUtil.getCurrentTenantId();
         
@@ -70,6 +72,7 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('OWNER', 'ADMIN')")
     public ResponseEntity<ApiResponse<Product>> updateProduct(
             @PathVariable Long id,
             @Valid @RequestBody CreateProductRequest request) {
@@ -91,6 +94,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('OWNER', 'ADMIN')")
     public ResponseEntity<ApiResponse<Void>> deleteProduct(@PathVariable Long id) {
         String tenantId = SecurityUtil.getCurrentTenantId();
         productService.delete(id, tenantId);

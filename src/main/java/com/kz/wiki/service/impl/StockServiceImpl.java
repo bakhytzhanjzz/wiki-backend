@@ -1,5 +1,6 @@
 package com.kz.wiki.service.impl;
 
+import com.kz.wiki.annotation.AuditLoggable;
 import com.kz.wiki.entity.Product;
 import com.kz.wiki.entity.StockTransaction;
 import com.kz.wiki.exception.BadRequestException;
@@ -25,6 +26,7 @@ public class StockServiceImpl implements StockService {
 
     @Override
     @Transactional
+    @AuditLoggable(action = "STOCK_RECEIPT", entityType = "STOCK")
     public StockTransaction recordReceipt(Long productId, Integer quantity, String reason, String tenantId, Long userId) {
         if (quantity == null || quantity <= 0) {
             throw new BadRequestException("Quantity must be greater than 0");
@@ -56,6 +58,7 @@ public class StockServiceImpl implements StockService {
 
     @Override
     @Transactional
+    @AuditLoggable(action = "STOCK_WRITEOFF", entityType = "STOCK")
     public StockTransaction recordWriteOff(Long productId, Integer quantity, String reason, String tenantId, Long userId) {
         if (quantity == null || quantity <= 0) {
             throw new BadRequestException("Quantity must be greater than 0");

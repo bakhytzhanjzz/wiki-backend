@@ -1,6 +1,8 @@
 package com.kz.wiki.exception;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -12,30 +14,35 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 @Slf4j
 @RestControllerAdvice
+@RequiredArgsConstructor
 public class GlobalExceptionHandler {
 
+    private final MessageSource messageSource;
+
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleResourceNotFound(ResourceNotFoundException ex) {
+    public ResponseEntity<ErrorResponse> handleResourceNotFound(ResourceNotFoundException ex, Locale locale) {
+        String message = messageSource.getMessage("error.resource.not.found", null, ex.getMessage(), locale);
         ErrorResponse error = ErrorResponse.builder()
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.NOT_FOUND.value())
-                .error("Resource Not Found")
-                .message(ex.getMessage())
+                .error(messageSource.getMessage("error.resource.not.found", null, "Resource Not Found", locale))
+                .message(message)
                 .path(getCurrentPath())
                 .build();
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<ErrorResponse> handleBadRequest(BadRequestException ex) {
+    public ResponseEntity<ErrorResponse> handleBadRequest(BadRequestException ex, Locale locale) {
         ErrorResponse error = ErrorResponse.builder()
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.BAD_REQUEST.value())
-                .error("Bad Request")
+                .error(messageSource.getMessage("error.bad.request", null, "Bad Request", locale))
                 .message(ex.getMessage())
                 .path(getCurrentPath())
                 .build();
@@ -91,19 +98,25 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleValidationExceptions(MethodArgumentNotValidException ex) {
+    public ResponseEntity<ErrorResponse> handleValidationExceptions(MethodArgumentNotValidException ex, Locale locale) {
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach((error) -> {
             String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
+            // Try to get localized message
+            try {
+                errorMessage = messageSource.getMessage(error.getCode(), null, errorMessage, locale);
+            } catch (Exception e) {
+                // Use default message if localization fails
+            }
             errors.put(fieldName, errorMessage);
         });
 
         ErrorResponse error = ErrorResponse.builder()
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.BAD_REQUEST.value())
-                .error("Validation Failed")
-                .message("Invalid input data")
+                .error(messageSource.getMessage("error.validation.failed", null, "Validation Failed", locale))
+                .message(messageSource.getMessage("error.validation.failed", null, "Invalid input data", locale))
                 .validationErrors(errors)
                 .path(getCurrentPath())
                 .build();

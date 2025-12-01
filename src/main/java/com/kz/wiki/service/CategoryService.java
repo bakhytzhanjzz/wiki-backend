@@ -13,3 +13,4 @@ public interface CategoryService {
     boolean existsById(Long id, String tenantId);
 }
 
+

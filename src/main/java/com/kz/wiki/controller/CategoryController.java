@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('OWNER', 'ADMIN')")
     public ResponseEntity<ApiResponse<Category>> createCategory(@Valid @RequestBody CreateCategoryRequest request) {
         String tenantId = SecurityUtil.getCurrentTenantId();
         
@@ -49,6 +51,7 @@ public class CategoryController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('OWNER', 'ADMIN')")
     public ResponseEntity<ApiResponse<Category>> updateCategory(
             @PathVariable Long id,
             @Valid @RequestBody CreateCategoryRequest request) {
@@ -62,6 +65,7 @@ public class CategoryController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('OWNER', 'ADMIN')")
     public ResponseEntity<ApiResponse<Void>> deleteCategory(@PathVariable Long id) {
         String tenantId = SecurityUtil.getCurrentTenantId();
         categoryService.delete(id, tenantId);
