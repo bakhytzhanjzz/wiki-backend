@@ -31,9 +31,21 @@ public class SaleItem {
     @Column(nullable = false)
     private Integer quantity;
 
-    @Column(name = "unit_price", precision = 19, scale = 2, nullable = false)
-    private BigDecimal unitPrice;
+    @Column(name = "price", precision = 19, scale = 2, nullable = false)
+    private BigDecimal price;
+
+    @Column(name = "wholesale_price", precision = 19, scale = 2)
+    private BigDecimal wholesalePrice;
+
+    @Column(name = "discount", precision = 19, scale = 2)
+    private BigDecimal discount = BigDecimal.ZERO;
+
+    @Column(name = "discount_type")
+    private String discountType; // percentage, fixed
 
     @Column(name = "total_price", precision = 19, scale = 2, nullable = false)
     private BigDecimal totalPrice;
+
+    @Column(name = "type")
+    private String type = "product"; // product, service, kit, certificate
 }
