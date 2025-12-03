@@ -41,3 +41,4 @@ public class CreateDiscountRequest {
     private Boolean isActive = true;
 }
 
+

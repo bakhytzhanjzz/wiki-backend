@@ -27,3 +27,4 @@ public class PaymentMethod extends BaseTenantEntity {
     private Integer sortOrder = 0;
 }
 
+

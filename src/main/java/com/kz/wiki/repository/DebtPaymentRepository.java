@@ -19,3 +19,4 @@ public interface DebtPaymentRepository extends JpaRepository<DebtPayment, Long> 
     BigDecimal getTotalPaymentsByCustomerId(@Param("customerId") Long customerId, @Param("tenantId") String tenantId);
 }
 
+

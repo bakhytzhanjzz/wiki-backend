@@ -31,8 +31,13 @@ public class SaleItem {
     @Column(nullable = false)
     private Integer quantity;
 
-    @Column(name = "price", precision = 19, scale = 2, nullable = false)
+    @Column(name = "unit_price", precision = 19, scale = 2, nullable = false)
     private BigDecimal price;
+    
+    // Database also has a 'price' column that needs to be populated
+    // This is a duplicate mapping - both unit_price and price should have the same value
+    @Column(name = "price", precision = 19, scale = 2, nullable = false, insertable = true, updatable = true)
+    private BigDecimal priceColumn;
 
     @Column(name = "wholesale_price", precision = 19, scale = 2)
     private BigDecimal wholesalePrice;

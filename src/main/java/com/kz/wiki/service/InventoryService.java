@@ -19,3 +19,4 @@ public interface InventoryService {
     void delete(Long id, String tenantId);
 }
 
+

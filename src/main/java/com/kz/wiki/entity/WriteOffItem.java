@@ -25,3 +25,4 @@ public class WriteOffItem extends BaseTenantEntity {
     private Integer quantity;
 }
 
+

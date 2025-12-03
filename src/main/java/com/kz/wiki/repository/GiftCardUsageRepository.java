@@ -18,3 +18,4 @@ public interface GiftCardUsageRepository extends JpaRepository<GiftCardUsage, Lo
     BigDecimal getTotalUsedByGiftCardId(@Param("giftCardId") Long giftCardId, @Param("tenantId") String tenantId);
 }
 
+

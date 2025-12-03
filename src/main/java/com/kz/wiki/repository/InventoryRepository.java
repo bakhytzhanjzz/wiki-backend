@@ -30,3 +30,4 @@ public interface InventoryRepository extends JpaRepository<Inventory, Long> {
                                                 @Param("endDate") LocalDate endDate);
 }
 
+

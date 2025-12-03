@@ -3,7 +3,6 @@ package com.kz.wiki.dto.request;
 import com.kz.wiki.entity.UserRole;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
@@ -23,9 +22,11 @@ public class RegisterRequest {
     @NotBlank(message = "Company name is required")
     private String companyName;
 
-    @NotNull(message = "Role is required")
+    // Role is automatically set to OWNER during registration
+    // Only used when creating additional users (not during company registration)
     private UserRole role;
 }
+
 
 
 

@@ -30,3 +30,4 @@ public interface TransferRepository extends JpaRepository<Transfer, Long> {
                                                    @Param("endDate") LocalDate endDate);
 }
 
+

@@ -42,3 +42,4 @@ public class CustomerDebt extends BaseTenantEntity {
     private LocalDateTime createdAt = LocalDateTime.now();
 }
 
+

@@ -14,3 +14,4 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
     boolean existsByIdAndTenantId(Long id, String tenantId);
 }
 
+

@@ -5,6 +5,7 @@ import com.kz.wiki.dto.request.RegisterRequest;
 import com.kz.wiki.dto.response.AuthResponse;
 import com.kz.wiki.entity.Company;
 import com.kz.wiki.entity.User;
+import com.kz.wiki.entity.UserRole;
 import com.kz.wiki.exception.BadRequestException;
 import com.kz.wiki.exception.UnauthorizedException;
 import com.kz.wiki.repository.CompanyRepository;
@@ -67,7 +68,8 @@ public class AuthServiceImpl implements AuthService {
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setFullName(request.getFullName());
-        user.setRole(request.getRole());
+        // Automatically set role to OWNER when registering a new company
+        user.setRole(request.getRole() != null ? request.getRole() : UserRole.OWNER);
         user.setTenantId(tenantId);
         user.setCreatedAt(LocalDateTime.now());
         user = userRepository.save(user);
@@ -164,6 +166,7 @@ public class AuthServiceImpl implements AuthService {
         }
     }
 }
+
 
 
 

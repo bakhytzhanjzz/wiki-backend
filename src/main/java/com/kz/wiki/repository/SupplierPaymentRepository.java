@@ -17,3 +17,4 @@ public interface SupplierPaymentRepository extends JpaRepository<SupplierPayment
     BigDecimal getTotalPaymentsBySupplierId(@Param("supplierId") Long supplierId, @Param("tenantId") String tenantId);
 }
 
+

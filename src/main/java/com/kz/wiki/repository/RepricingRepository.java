@@ -27,3 +27,4 @@ public interface RepricingRepository extends JpaRepository<Repricing, Long> {
     List<Repricing> findByTenantIdAndDate(@Param("tenantId") String tenantId, @Param("date") LocalDate date);
 }
 
+

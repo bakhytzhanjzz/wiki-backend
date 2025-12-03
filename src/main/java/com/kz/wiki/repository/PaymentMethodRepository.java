@@ -16,3 +16,4 @@ public interface PaymentMethodRepository extends JpaRepository<PaymentMethod, Lo
     List<PaymentMethod> findByTenantIdOrderBySortOrderAsc(String tenantId);
 }
 
+

@@ -13,3 +13,4 @@ public interface CustomerDebtRepository extends JpaRepository<CustomerDebt, Long
     List<CustomerDebt> findBySaleIdAndTenantId(Long saleId, String tenantId);
 }
 
+

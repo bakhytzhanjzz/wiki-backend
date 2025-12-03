@@ -18,3 +18,4 @@ public class Store extends BaseTenantEntity {
     private String address;
 }
 
+

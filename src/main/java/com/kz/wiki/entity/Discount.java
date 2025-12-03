@@ -67,3 +67,4 @@ public class Discount extends BaseTenantEntity {
     private LocalDateTime createdAt = LocalDateTime.now();
 }
 
+

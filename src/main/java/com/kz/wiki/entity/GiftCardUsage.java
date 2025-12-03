@@ -26,3 +26,4 @@ public class GiftCardUsage extends BaseTenantEntity {
     private LocalDateTime createdAt = LocalDateTime.now();
 }
 
+

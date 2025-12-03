@@ -12,3 +12,4 @@ public interface WriteOffItemRepository extends JpaRepository<WriteOffItem, Long
     void deleteByWriteOffId(Long writeOffId);
 }
 
+

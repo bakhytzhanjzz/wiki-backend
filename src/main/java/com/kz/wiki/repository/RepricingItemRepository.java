@@ -12,3 +12,4 @@ public interface RepricingItemRepository extends JpaRepository<RepricingItem, Lo
     void deleteByRepricingId(Long repricingId);
 }
 
+

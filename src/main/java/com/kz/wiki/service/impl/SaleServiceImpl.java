@@ -45,12 +45,12 @@ public class SaleServiceImpl implements SaleService {
         sale.setSaleTime(LocalDateTime.now());
         sale.setType(SaleType.SALE);
         
-        // Generate transaction and receipt numbers
+        // Generate transaction and receipt numbers with retry logic for uniqueness
         if (sale.getTransactionNumber() == null) {
-            sale.setTransactionNumber(generateTransactionNumber(sale.getStoreId(), tenantId));
+            sale.setTransactionNumber(generateUniqueTransactionNumber(sale.getStoreId(), tenantId));
         }
         if (sale.getReceiptNumber() == null) {
-            sale.setReceiptNumber(generateReceiptNumber(sale.getStoreId(), tenantId));
+            sale.setReceiptNumber(generateUniqueReceiptNumber(sale.getStoreId(), tenantId));
         }
         
         // Set status
@@ -99,6 +99,8 @@ public class SaleServiceImpl implements SaleService {
             }
             
             item.setPrice(unitPrice);
+            // Also set priceColumn to match unit_price (database has both columns)
+            item.setPriceColumn(unitPrice);
             item.setTotalPrice(itemTotal);
             item.setSale(sale);
             item.setType("product"); // Default type
@@ -129,17 +131,25 @@ public class SaleServiceImpl implements SaleService {
             }
         }
         
-        BigDecimal totalAmount = subtotal.subtract(discountAmount);
-        sale.setTotalAmount(totalAmount);
+        BigDecimal calculatedTotalAmount = subtotal.subtract(discountAmount);
+        // Ensure totalAmount is never null (required field)
+        if (calculatedTotalAmount == null) {
+            calculatedTotalAmount = BigDecimal.ZERO;
+        }
+        final BigDecimal finalTotalAmount = calculatedTotalAmount;
+        sale.setTotalAmount(finalTotalAmount);
         
         // Update customer stats if customer exists
         if (sale.getCustomerId() != null) {
             customerRepository.findByIdAndTenantId(sale.getCustomerId(), tenantId).ifPresent(customer -> {
-                customer.setTotalPurchases(customer.getTotalPurchases().add(totalAmount));
-                customer.setTotalTransactions(customer.getTotalTransactions() + 1);
+                BigDecimal currentPurchases = customer.getTotalPurchases() != null ? customer.getTotalPurchases() : BigDecimal.ZERO;
+                customer.setTotalPurchases(currentPurchases.add(finalTotalAmount));
+                Integer currentTransactions = customer.getTotalTransactions() != null ? customer.getTotalTransactions() : 0;
+                customer.setTotalTransactions(currentTransactions + 1);
                 customer.setLastPurchaseDate(LocalDateTime.now());
                 if (sale.getLoyaltyPointsEarned() != null) {
-                    customer.setLoyaltyPoints(customer.getLoyaltyPoints() + sale.getLoyaltyPointsEarned());
+                    Integer currentPoints = customer.getLoyaltyPoints() != null ? customer.getLoyaltyPoints() : 0;
+                    customer.setLoyaltyPoints(currentPoints + sale.getLoyaltyPointsEarned());
                 }
                 customerRepository.save(customer);
             });
@@ -346,6 +356,10 @@ public class SaleServiceImpl implements SaleService {
     @Transactional
     @AuditLoggable(action = "SAVE_DRAFT", entityType = "SALE")
     public Sale saveDraft(Sale sale, String tenantId, Long userId) {
+        if (sale.getItems() == null || sale.getItems().isEmpty()) {
+            throw new BadRequestException("Draft must have at least one item");
+        }
+
         sale.setStatus("draft");
         sale.setTenantId(tenantId);
         sale.setCreatedBy(userId);
@@ -353,11 +367,50 @@ public class SaleServiceImpl implements SaleService {
         sale.setType(SaleType.SALE);
         
         if (sale.getTransactionNumber() == null) {
-            sale.setTransactionNumber(generateTransactionNumber(sale.getStoreId(), tenantId));
+            sale.setTransactionNumber(generateUniqueTransactionNumber(sale.getStoreId(), tenantId));
         }
 
-        // Calculate totals without updating stock
-        BigDecimal subtotal = calculateSubtotal(sale);
+        BigDecimal subtotal = BigDecimal.ZERO;
+
+        // Process each sale item (without updating stock for drafts)
+        for (SaleItem item : sale.getItems()) {
+            if (item.getProduct() == null || item.getProduct().getId() == null) {
+                throw new BadRequestException("Sale item must have a valid product");
+            }
+
+            Product product = productRepository.findByIdAndTenantId(
+                    item.getProduct().getId(), tenantId)
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                            "Product", "id", item.getProduct().getId()));
+
+            if (item.getQuantity() == null || item.getQuantity() <= 0) {
+                throw new BadRequestException("Item quantity must be greater than 0");
+            }
+
+            BigDecimal unitPrice = item.getPrice() != null ? item.getPrice() : product.getPrice();
+            
+            // Apply item discount
+            BigDecimal itemTotal = unitPrice.multiply(BigDecimal.valueOf(item.getQuantity()));
+            if (item.getDiscount() != null && item.getDiscount().compareTo(BigDecimal.ZERO) > 0) {
+                BigDecimal discountAmount = BigDecimal.ZERO;
+                if ("percentage".equals(item.getDiscountType())) {
+                    discountAmount = itemTotal.multiply(item.getDiscount()).divide(BigDecimal.valueOf(100));
+                } else {
+                    discountAmount = item.getDiscount();
+                }
+                itemTotal = itemTotal.subtract(discountAmount);
+            }
+            
+            item.setPrice(unitPrice);
+            // Also set priceColumn to match unit_price (database has both columns)
+            item.setPriceColumn(unitPrice);
+            item.setTotalPrice(itemTotal);
+            item.setSale(sale); // CRITICAL: Set the sale reference
+            item.setType("product"); // Default type
+
+            subtotal = subtotal.add(itemTotal);
+        }
+
         sale.setSubtotal(subtotal);
         sale.setTotalAmount(subtotal);
 
@@ -370,6 +423,10 @@ public class SaleServiceImpl implements SaleService {
     @Transactional
     @AuditLoggable(action = "SAVE_DEFERRED", entityType = "SALE")
     public Sale saveDeferred(Sale sale, String tenantId, Long userId) {
+        if (sale.getItems() == null || sale.getItems().isEmpty()) {
+            throw new BadRequestException("Deferred sale must have at least one item");
+        }
+
         sale.setStatus("deferred");
         sale.setTenantId(tenantId);
         sale.setCreatedBy(userId);
@@ -377,10 +434,50 @@ public class SaleServiceImpl implements SaleService {
         sale.setType(SaleType.SALE);
         
         if (sale.getTransactionNumber() == null) {
-            sale.setTransactionNumber(generateTransactionNumber(sale.getStoreId(), tenantId));
+            sale.setTransactionNumber(generateUniqueTransactionNumber(sale.getStoreId(), tenantId));
         }
 
-        BigDecimal subtotal = calculateSubtotal(sale);
+        BigDecimal subtotal = BigDecimal.ZERO;
+
+        // Process each sale item (without updating stock for deferred sales)
+        for (SaleItem item : sale.getItems()) {
+            if (item.getProduct() == null || item.getProduct().getId() == null) {
+                throw new BadRequestException("Sale item must have a valid product");
+            }
+
+            Product product = productRepository.findByIdAndTenantId(
+                    item.getProduct().getId(), tenantId)
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                            "Product", "id", item.getProduct().getId()));
+
+            if (item.getQuantity() == null || item.getQuantity() <= 0) {
+                throw new BadRequestException("Item quantity must be greater than 0");
+            }
+
+            BigDecimal unitPrice = item.getPrice() != null ? item.getPrice() : product.getPrice();
+            
+            // Apply item discount
+            BigDecimal itemTotal = unitPrice.multiply(BigDecimal.valueOf(item.getQuantity()));
+            if (item.getDiscount() != null && item.getDiscount().compareTo(BigDecimal.ZERO) > 0) {
+                BigDecimal discountAmount = BigDecimal.ZERO;
+                if ("percentage".equals(item.getDiscountType())) {
+                    discountAmount = itemTotal.multiply(item.getDiscount()).divide(BigDecimal.valueOf(100));
+                } else {
+                    discountAmount = item.getDiscount();
+                }
+                itemTotal = itemTotal.subtract(discountAmount);
+            }
+            
+            item.setPrice(unitPrice);
+            // Also set priceColumn to match unit_price (database has both columns)
+            item.setPriceColumn(unitPrice);
+            item.setTotalPrice(itemTotal);
+            item.setSale(sale); // CRITICAL: Set the sale reference
+            item.setType("product"); // Default type
+
+            subtotal = subtotal.add(itemTotal);
+        }
+
         sale.setSubtotal(subtotal);
         sale.setTotalAmount(subtotal);
 
@@ -696,16 +793,62 @@ public class SaleServiceImpl implements SaleService {
         return generateTransactionNumber(storeId, tenantId);
     }
 
+    private String generateUniqueTransactionNumber(Long storeId, String tenantId) {
+        String transactionNumber;
+        int attempts = 0;
+        int maxAttempts = 10;
+        
+        do {
+            String year = String.valueOf(LocalDate.now().getYear());
+            // Use timestamp + random to ensure uniqueness
+            long timestamp = System.currentTimeMillis() % 100000; // Last 5 digits of timestamp
+            long count = saleRepository.countByTenantId(tenantId) + 1;
+            // Add tenant hash to make it unique across tenants
+            String tenantHash = tenantId.length() > 4 ? tenantId.substring(0, 4) : tenantId;
+            transactionNumber = String.format("TXN-%s-%s-%05d-%05d", year, tenantHash.toUpperCase(), count, timestamp);
+            attempts++;
+        } while (saleRepository.findByTransactionNumberAndTenantId(transactionNumber, tenantId).isPresent() && attempts < maxAttempts);
+        
+        if (attempts >= maxAttempts) {
+            // Fallback: use UUID-based number
+            String uuid = UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+            transactionNumber = String.format("TXN-%s-%s", LocalDate.now().getYear(), uuid);
+        }
+        
+        return transactionNumber;
+    }
+
+    private String generateUniqueReceiptNumber(Long storeId, String tenantId) {
+        String receiptNumber;
+        int attempts = 0;
+        int maxAttempts = 10;
+        
+        do {
+            String year = String.valueOf(LocalDate.now().getYear());
+            // Use timestamp + random to ensure uniqueness
+            long timestamp = System.currentTimeMillis() % 100000; // Last 5 digits of timestamp
+            long count = saleRepository.countByTenantId(tenantId) + 1;
+            // Add tenant hash to make it unique across tenants
+            String tenantHash = tenantId.length() > 4 ? tenantId.substring(0, 4) : tenantId;
+            receiptNumber = String.format("RCP-%s-%s-%05d-%05d", year, tenantHash.toUpperCase(), count, timestamp);
+            attempts++;
+        } while (saleRepository.findByReceiptNumberAndTenantId(receiptNumber, tenantId).isPresent() && attempts < maxAttempts);
+        
+        if (attempts >= maxAttempts) {
+            // Fallback: use UUID-based number
+            String uuid = UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+            receiptNumber = String.format("RCP-%s-%s", LocalDate.now().getYear(), uuid);
+        }
+        
+        return receiptNumber;
+    }
+    
     private String generateTransactionNumber(Long storeId, String tenantId) {
-        String year = String.valueOf(LocalDate.now().getYear());
-        long count = saleRepository.count() + 1;
-        return String.format("TXN-%s-%03d", year, count);
+        return generateUniqueTransactionNumber(storeId, tenantId);
     }
 
     private String generateReceiptNumber(Long storeId, String tenantId) {
-        String year = String.valueOf(LocalDate.now().getYear());
-        long count = saleRepository.count() + 1;
-        return String.format("RCP-%s-%03d", year, count);
+        return generateUniqueReceiptNumber(storeId, tenantId);
     }
 
     private BigDecimal calculateSubtotal(Sale sale) {

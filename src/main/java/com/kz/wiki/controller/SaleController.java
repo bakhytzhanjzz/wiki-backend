@@ -39,7 +39,8 @@ public class SaleController {
         Sale sale = new Sale();
         sale.setStoreId(request.getStoreId());
         sale.setCustomerId(request.getCustomerId());
-        sale.setSellerId(request.getSellerId());
+        // Default sellerId to current user if not provided
+        sale.setSellerId(request.getSellerId() != null ? request.getSellerId() : userId);
         sale.setSubtotal(request.getSubtotal());
         sale.setDiscount(request.getDiscount());
         sale.setDiscountType(request.getDiscountType());

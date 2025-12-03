@@ -16,3 +16,4 @@ public interface SupplierService {
     SupplierPayment addPayment(Long supplierId, SupplierPayment payment, String tenantId, Long userId);
 }
 
+

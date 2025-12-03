@@ -31,3 +31,4 @@ public class InventoryItem extends BaseTenantEntity {
     private Integer difference;
 }
 
+

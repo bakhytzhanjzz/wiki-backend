@@ -16,3 +16,4 @@ public class CreateInventoryRequest {
     private String type; // full, partial
 }
 
+

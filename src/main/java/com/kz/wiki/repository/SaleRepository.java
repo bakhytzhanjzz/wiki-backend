@@ -15,6 +15,7 @@ import java.util.Optional;
 @Repository
 public interface SaleRepository extends JpaRepository<Sale, Long> {
     List<Sale> findByTenantId(String tenantId);
+    Long countByTenantId(String tenantId);
     
     @EntityGraph(attributePaths = {"items", "items.product", "items.product.category"})
     Optional<Sale> findByIdAndTenantId(Long id, String tenantId);

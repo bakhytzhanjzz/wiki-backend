@@ -26,3 +26,4 @@ public class Supplier extends BaseTenantEntity {
     private String note;
 }
 
+

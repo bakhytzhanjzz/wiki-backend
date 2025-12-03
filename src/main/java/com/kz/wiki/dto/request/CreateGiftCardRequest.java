@@ -24,3 +24,4 @@ public class CreateGiftCardRequest {
     private String status;
 }
 
+

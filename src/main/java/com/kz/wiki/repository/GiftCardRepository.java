@@ -33,3 +33,4 @@ public interface GiftCardRepository extends JpaRepository<GiftCard, Long> {
     List<GiftCard> findActiveByTenantId(@Param("tenantId") String tenantId, @Param("now") LocalDateTime now);
 }
 
+

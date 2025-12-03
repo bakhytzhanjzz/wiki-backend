@@ -33,3 +33,4 @@ public class SupplierPayment extends BaseTenantEntity {
     private Long createdBy;
 }
 
+

@@ -27,3 +27,4 @@ public class RepricingItem extends BaseTenantEntity {
     private BigDecimal newPrice;
 }
 
+

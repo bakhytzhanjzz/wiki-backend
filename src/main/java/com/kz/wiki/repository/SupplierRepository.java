@@ -21,3 +21,4 @@ public interface SupplierRepository extends JpaRepository<Supplier, Long> {
     List<Supplier> searchByTenantId(@Param("tenantId") String tenantId, @Param("searchTerm") String searchTerm);
 }
 
+

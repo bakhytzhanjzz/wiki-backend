@@ -29,3 +29,4 @@ public interface WriteOffRepository extends JpaRepository<WriteOff, Long> {
                                                @Param("endDate") LocalDate endDate);
 }
 
+

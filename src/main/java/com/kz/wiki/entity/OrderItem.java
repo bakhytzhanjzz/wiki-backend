@@ -30,3 +30,4 @@ public class OrderItem extends BaseTenantEntity {
     private BigDecimal price;
 }
 
+

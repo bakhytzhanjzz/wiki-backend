@@ -31,3 +31,4 @@ public interface DiscountRepository extends JpaRepository<Discount, Long> {
     List<Discount> findActiveByTenantId(@Param("tenantId") String tenantId, @Param("now") LocalDateTime now);
 }
 
+
