@@ -1,0 +1,729 @@
+{
+	"info": {
+		"_postman_id": "wiki-api-collection",
+		"name": "Wiki API - Auth, Products, Sales",
+		"description": "API collection for Wiki Inventory & POS System - Auth, Products, and Sales modules",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8081/api",
+			"type": "string"
+		},
+		{
+			"key": "accessToken",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"owner@test.com\",\n  \"password\": \"password123\",\n  \"fullName\": \"Test Owner\",\n  \"companyName\": \"Test Company\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/register",
+							"host": ["{{baseUrl}}"],
+							"path": ["auth", "register"]
+						}
+					},
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set(\"accessToken\", jsonData.data.accessToken);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"owner@test.com\",\n  \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/login",
+							"host": ["{{baseUrl}}"],
+							"path": ["auth", "login"]
+						}
+					},
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set(\"accessToken\", jsonData.data.accessToken);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "Refresh Token",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"refreshToken\": \"{{refreshToken}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/refresh",
+							"host": ["{{baseUrl}}"],
+							"path": ["auth", "refresh"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Test Data",
+			"item": [
+				{
+					"name": "Initialize Test Data",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/test-data/init",
+							"host": ["{{baseUrl}}"],
+							"path": ["test-data", "init"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "Create Product",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Laptop Computer\",\n  \"sku\": \"LAP-001\",\n  \"price\": 999.99,\n  \"stockQty\": 50,\n  \"barcode\": \"1234567890123\",\n  \"unit\": \"pcs\",\n  \"description\": \"High-performance laptop\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/products",
+							"host": ["{{baseUrl}}"],
+							"path": ["products"]
+						}
+					}
+				},
+				{
+					"name": "Get All Products",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/products",
+							"host": ["{{baseUrl}}"],
+							"path": ["products"]
+						}
+					}
+				},
+				{
+					"name": "Get Product by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/products/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["products", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Update Product",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Laptop Computer Updated\",\n  \"sku\": \"LAP-001\",\n  \"price\": 1099.99,\n  \"stockQty\": 45\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/products/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["products", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Delete Product",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/products/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["products", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Check SKU Exists",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/products/sku/:sku/exists",
+							"host": ["{{baseUrl}}"],
+							"path": ["products", "sku", ":sku", "exists"],
+							"variable": [
+								{
+									"key": "sku",
+									"value": "LAP-001"
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Sales",
+			"item": [
+				{
+					"name": "Create Sale",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"storeId\": 1,\n  \"customerId\": null,\n  \"sellerId\": null,\n  \"items\": [\n    {\n      \"productId\": 1,\n      \"quantity\": 2,\n      \"price\": 100.00\n    }\n  ],\n  \"subtotal\": 200.00,\n  \"totalAmount\": 200.00,\n  \"paymentMethod\": \"cash\",\n  \"isDraft\": false\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/sales",
+							"host": ["{{baseUrl}}"],
+							"path": ["sales"]
+						}
+					}
+				},
+				{
+					"name": "Get All Sales",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/sales",
+							"host": ["{{baseUrl}}"],
+							"path": ["sales"]
+						}
+					}
+				},
+				{
+					"name": "Get Sale by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/sales/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["sales", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Update Sale",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"storeId\": 1,\n  \"items\": [\n    {\n      \"productId\": 1,\n      \"quantity\": 3,\n      \"price\": 100.00\n    }\n  ],\n  \"subtotal\": 300.00,\n  \"totalAmount\": 300.00,\n  \"paymentMethod\": \"cash\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/sales/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["sales", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Delete Sale",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/sales/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["sales", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Cancel Sale",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"reason\": \"Customer cancelled\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/sales/:id/cancel",
+							"host": ["{{baseUrl}}"],
+							"path": ["sales", ":id", "cancel"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Create Return",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"items\": [\n    {\n      \"saleItemId\": 1,\n      \"quantity\": 1,\n      \"reason\": \"Defective product\"\n    }\n  ],\n  \"refundMethod\": \"cash\",\n  \"note\": \"Return processed\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/sales/:id/return",
+							"host": ["{{baseUrl}}"],
+							"path": ["sales", ":id", "return"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get All Returns",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/sales/returns",
+							"host": ["{{baseUrl}}"],
+							"path": ["sales", "returns"]
+						}
+					}
+				},
+				{
+					"name": "Create Exchange",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"returnItems\": [\n    {\n      \"saleItemId\": 1,\n      \"quantity\": 1,\n      \"reason\": \"Wrong size\"\n    }\n  ],\n  \"newItems\": [\n    {\n      \"productId\": 2,\n      \"quantity\": 1,\n      \"price\": 120.00\n    }\n  ],\n  \"differenceAmount\": 20.00,\n  \"paymentMethod\": \"cash\",\n  \"note\": \"Exchange processed\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/sales/:id/exchange",
+							"host": ["{{baseUrl}}"],
+							"path": ["sales", ":id", "exchange"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get All Exchanges",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/sales/exchanges",
+							"host": ["{{baseUrl}}"],
+							"path": ["sales", "exchanges"]
+						}
+					}
+				},
+				{
+					"name": "Get All Drafts",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/sales/drafts",
+							"host": ["{{baseUrl}}"],
+							"path": ["sales", "drafts"]
+						}
+					}
+				},
+				{
+					"name": "Save Draft",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"storeId\": 1,\n  \"items\": [\n    {\n      \"productId\": 1,\n      \"quantity\": 1,\n      \"price\": 50.00\n    }\n  ],\n  \"subtotal\": 50.00,\n  \"totalAmount\": 50.00,\n  \"isDraft\": true\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/sales/drafts",
+							"host": ["{{baseUrl}}"],
+							"path": ["sales", "drafts"]
+						}
+					}
+				},
+				{
+					"name": "Complete Draft",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/sales/drafts/:id/complete",
+							"host": ["{{baseUrl}}"],
+							"path": ["sales", "drafts", ":id", "complete"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get All Deferred",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/sales/deferred",
+							"host": ["{{baseUrl}}"],
+							"path": ["sales", "deferred"]
+						}
+					}
+				},
+				{
+					"name": "Save Deferred",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"storeId\": 1,\n  \"items\": [\n    {\n      \"productId\": 1,\n      \"quantity\": 1,\n      \"price\": 50.00\n    }\n  ],\n  \"subtotal\": 50.00,\n  \"totalAmount\": 50.00,\n  \"isDeferred\": true\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/sales/deferred",
+							"host": ["{{baseUrl}}"],
+							"path": ["sales", "deferred"]
+						}
+					}
+				},
+				{
+					"name": "Complete Deferred",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/sales/deferred/:id/complete",
+							"host": ["{{baseUrl}}"],
+							"path": ["sales", "deferred", ":id", "complete"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Statistics",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/sales/statistics?startDate=2024-01-01&endDate=2024-12-31",
+							"host": ["{{baseUrl}}"],
+							"path": ["sales", "statistics"],
+							"query": [
+								{
+									"key": "startDate",
+									"value": "2024-01-01"
+								},
+								{
+									"key": "endDate",
+									"value": "2024-12-31"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Next Transaction Number",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/sales/next-transaction-number",
+							"host": ["{{baseUrl}}"],
+							"path": ["sales", "next-transaction-number"]
+						}
+					}
+				}
+			]
+		}
+	]
+}
+

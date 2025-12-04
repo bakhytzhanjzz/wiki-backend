@@ -26,3 +26,4 @@ public interface StockTransactionRepository extends JpaRepository<StockTransacti
 
 
 
+

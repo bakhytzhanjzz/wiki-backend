@@ -13,3 +13,4 @@ public interface InventoryItemRepository extends JpaRepository<InventoryItem, Lo
 }
 
 
+

@@ -19,3 +19,4 @@ public interface GiftCardUsageRepository extends JpaRepository<GiftCardUsage, Lo
 }
 
 
+
