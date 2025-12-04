@@ -12,3 +12,4 @@ public interface LoyaltyProgramService {
     LoyaltyProgramResponse deleteLevel(Long levelId, String tenantId);
 }
 
+

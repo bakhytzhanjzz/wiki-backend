@@ -24,3 +24,4 @@ public interface CustomerGroupRepository extends JpaRepository<CustomerGroup, Lo
     void deleteByGroupIdAndTenantId(Long groupId, String tenantId);
 }
 
+

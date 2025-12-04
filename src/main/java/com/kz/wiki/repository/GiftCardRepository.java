@@ -35,3 +35,4 @@ public interface GiftCardRepository extends JpaRepository<GiftCard, Long> {
 
 
 
+

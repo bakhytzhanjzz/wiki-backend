@@ -30,3 +30,4 @@ public class LoyaltyProgram extends BaseTenantEntity {
     private LocalDateTime updatedAt = LocalDateTime.now();
 }
 
+

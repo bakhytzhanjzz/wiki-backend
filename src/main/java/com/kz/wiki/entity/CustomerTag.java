@@ -19,3 +19,4 @@ public class CustomerTag extends BaseTenantEntity {
     private Long tagId;
 }
 
+

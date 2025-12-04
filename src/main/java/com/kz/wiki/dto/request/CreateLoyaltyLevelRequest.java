@@ -21,3 +21,4 @@ public class CreateLoyaltyLevelRequest {
     private Integer order;
 }
 
+

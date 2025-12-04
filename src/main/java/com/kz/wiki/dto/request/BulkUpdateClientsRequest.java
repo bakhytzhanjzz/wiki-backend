@@ -11,3 +11,4 @@ public class BulkUpdateClientsRequest {
     private Map<String, Object> updates; // language, notifications, etc.
 }
 
+

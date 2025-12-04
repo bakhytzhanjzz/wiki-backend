@@ -15,3 +15,4 @@ public class LoyaltyProgramResponse {
     private LocalDateTime updatedAt;
 }
 
+

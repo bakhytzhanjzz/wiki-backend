@@ -24,3 +24,4 @@ public interface CustomerTagRepository extends JpaRepository<CustomerTag, Long> 
     void deleteByTagIdAndTenantId(Long tagId, String tenantId);
 }
 
+

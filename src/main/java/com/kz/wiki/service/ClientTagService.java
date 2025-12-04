@@ -16,3 +16,4 @@ public interface ClientTagService {
     void delete(Long id, String tenantId);
 }
 
+

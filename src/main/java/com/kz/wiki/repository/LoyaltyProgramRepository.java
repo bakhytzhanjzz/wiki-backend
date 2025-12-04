@@ -13,3 +13,4 @@ public interface LoyaltyProgramRepository extends JpaRepository<LoyaltyProgram, 
     boolean existsByTenantId(String tenantId);
 }
 
+

@@ -34,3 +34,4 @@ public class ClientGroup extends BaseTenantEntity {
     private LocalDateTime updatedAt = LocalDateTime.now();
 }
 
+

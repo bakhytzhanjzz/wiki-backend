@@ -11,7 +11,8 @@ import java.util.Optional;
 public interface LoyaltyLevelRepository extends JpaRepository<LoyaltyLevel, Long> {
     Optional<LoyaltyLevel> findByIdAndTenantId(Long id, String tenantId);
     List<LoyaltyLevel> findByLoyaltyProgramIdAndTenantId(Long loyaltyProgramId, String tenantId);
-    List<LoyaltyLevel> findByLoyaltyProgramIdOrderByOrderAsc(Long loyaltyProgramId);
+    List<LoyaltyLevel> findByLoyaltyProgramIdAndTenantIdOrderByOrderAsc(Long loyaltyProgramId, String tenantId);
     boolean existsByIdAndTenantId(Long id, String tenantId);
 }
+
 

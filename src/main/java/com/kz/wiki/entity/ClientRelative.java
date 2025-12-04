@@ -21,3 +21,4 @@ public class ClientRelative extends BaseTenantEntity {
     private String phone;
 }
 
+

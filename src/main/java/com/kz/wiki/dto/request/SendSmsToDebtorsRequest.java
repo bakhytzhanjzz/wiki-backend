@@ -15,3 +15,4 @@ public class SendSmsToDebtorsRequest {
     private String message;
 }
 
+

@@ -128,7 +128,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
         response.setCreatedAt(program.getCreatedAt());
         response.setUpdatedAt(program.getUpdatedAt());
         
-        List<LoyaltyLevel> levels = levelRepository.findByLoyaltyProgramIdOrderByOrderAsc(program.getId());
+        List<LoyaltyLevel> levels = levelRepository.findByLoyaltyProgramIdAndTenantIdOrderByOrderAsc(program.getId(), program.getTenantId());
         List<LoyaltyLevelResponse> levelResponses = levels.stream()
                 .map(level -> toLevelResponse(level))
                 .collect(Collectors.toList());

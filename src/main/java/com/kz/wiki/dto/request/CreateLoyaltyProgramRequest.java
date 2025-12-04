@@ -12,3 +12,4 @@ public class CreateLoyaltyProgramRequest {
     private String name;
 }
 
+

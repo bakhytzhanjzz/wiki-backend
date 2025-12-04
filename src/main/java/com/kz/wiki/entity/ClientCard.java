@@ -23,3 +23,4 @@ public class ClientCard extends BaseTenantEntity {
     private String fileUrl;
 }
 
+

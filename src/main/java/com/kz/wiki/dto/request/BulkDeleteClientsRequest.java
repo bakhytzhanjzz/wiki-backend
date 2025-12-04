@@ -9,3 +9,4 @@ public class BulkDeleteClientsRequest {
     private List<Long> clientIds;
 }
 
+

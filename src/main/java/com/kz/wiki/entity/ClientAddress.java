@@ -24,3 +24,4 @@ public class ClientAddress extends BaseTenantEntity {
     private String postalCode;
 }
 
+

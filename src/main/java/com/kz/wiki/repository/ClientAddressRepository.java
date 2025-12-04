@@ -14,3 +14,4 @@ public interface ClientAddressRepository extends JpaRepository<ClientAddress, Lo
     void deleteByClientIdAndTenantId(Long clientId, String tenantId);
 }
 
+

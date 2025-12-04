@@ -31,3 +31,4 @@ public class ClientTag extends BaseTenantEntity {
     private LocalDateTime updatedAt = LocalDateTime.now();
 }
 
+

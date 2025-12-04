@@ -13,3 +13,4 @@ public class LoyaltyLevelResponse {
     private Integer order;
 }
 
+

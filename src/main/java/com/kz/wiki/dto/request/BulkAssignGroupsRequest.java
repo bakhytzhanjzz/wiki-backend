@@ -10,3 +10,4 @@ public class BulkAssignGroupsRequest {
     private List<Long> groupIds;
 }
 
+

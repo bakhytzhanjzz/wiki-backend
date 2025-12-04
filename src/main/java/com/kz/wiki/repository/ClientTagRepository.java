@@ -40,3 +40,4 @@ public interface ClientTagRepository extends JpaRepository<ClientTag, Long> {
     boolean existsByIdAndTenantId(Long id, String tenantId);
 }
 
+

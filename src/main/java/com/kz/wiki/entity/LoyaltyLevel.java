@@ -28,7 +28,8 @@ public class LoyaltyLevel extends BaseTenantEntity {
     @Column(name = "discount")
     private Integer discount = 0;
 
-    @Column(nullable = false)
+    @Column(name = "level_order", nullable = false)
     private Integer order;
 }
+
 

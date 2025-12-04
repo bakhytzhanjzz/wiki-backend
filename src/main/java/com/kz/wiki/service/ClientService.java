@@ -33,3 +33,4 @@ public interface ClientService {
     List<ClientResponse> searchForDebts(String search, String tenantId, Boolean hasDebt);
 }
 
+

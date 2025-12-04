@@ -10,3 +10,4 @@ public class BulkAssignTagsRequest {
     private List<Long> tagIds;
 }
 
+

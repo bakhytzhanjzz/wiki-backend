@@ -36,3 +36,4 @@ public interface ClientGroupRepository extends JpaRepository<ClientGroup, Long> 
     boolean existsByIdAndTenantId(Long id, String tenantId);
 }
 
+
