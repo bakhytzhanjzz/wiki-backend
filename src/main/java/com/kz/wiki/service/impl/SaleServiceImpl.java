@@ -144,8 +144,6 @@ public class SaleServiceImpl implements SaleService {
             customerRepository.findByIdAndTenantId(sale.getCustomerId(), tenantId).ifPresent(customer -> {
                 BigDecimal currentPurchases = customer.getTotalPurchases() != null ? customer.getTotalPurchases() : BigDecimal.ZERO;
                 customer.setTotalPurchases(currentPurchases.add(finalTotalAmount));
-                Integer currentTransactions = customer.getTotalTransactions() != null ? customer.getTotalTransactions() : 0;
-                customer.setTotalTransactions(currentTransactions + 1);
                 customer.setLastPurchaseDate(LocalDateTime.now());
                 if (sale.getLoyaltyPointsEarned() != null) {
                     Integer currentPoints = customer.getLoyaltyPoints() != null ? customer.getLoyaltyPoints() : 0;

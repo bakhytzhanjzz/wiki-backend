@@ -51,7 +51,9 @@ public class CustomerServiceImpl implements CustomerService {
 
         customer.setTenantId(tenantId);
         Customer saved = customerRepository.save(customer);
-        log.info("Customer created: {} (ID: {}) for tenant: {}", saved.getName(), saved.getId(), tenantId);
+        String customerName = (saved.getFirstName() != null ? saved.getFirstName() : "") + 
+                             (saved.getLastName() != null ? " " + saved.getLastName() : "");
+        log.info("Customer created: {} (ID: {}) for tenant: {}", customerName.trim(), saved.getId(), tenantId);
         return saved;
     }
 
@@ -68,14 +70,17 @@ public class CustomerServiceImpl implements CustomerService {
             throw new BadRequestException("Customer with phone " + customer.getPhone() + " already exists");
         }
 
-        existing.setName(customer.getName());
+        existing.setFirstName(customer.getFirstName());
+        existing.setLastName(customer.getLastName());
+        existing.setMiddleName(customer.getMiddleName());
         existing.setPhone(customer.getPhone());
         existing.setEmail(customer.getEmail());
-        existing.setCardNumber(customer.getCardNumber());
         existing.setNotes(customer.getNotes());
 
         Customer updated = customerRepository.save(existing);
-        log.info("Customer updated: {} (ID: {}) for tenant: {}", updated.getName(), updated.getId(), tenantId);
+        String customerName = (updated.getFirstName() != null ? updated.getFirstName() : "") + 
+                             (updated.getLastName() != null ? " " + updated.getLastName() : "");
+        log.info("Customer updated: {} (ID: {}) for tenant: {}", customerName.trim(), updated.getId(), tenantId);
         return updated;
     }
 
@@ -130,7 +135,9 @@ public class CustomerServiceImpl implements CustomerService {
                 .orElseThrow(() -> new ResourceNotFoundException("Customer", "id", id));
         
         customerRepository.delete(customer);
-        log.info("Customer deleted: {} (ID: {}) for tenant: {}", customer.getName(), customer.getId(), tenantId);
+        String customerName = (customer.getFirstName() != null ? customer.getFirstName() : "") + 
+                             (customer.getLastName() != null ? " " + customer.getLastName() : "");
+        log.info("Customer deleted: {} (ID: {}) for tenant: {}", customerName.trim(), customer.getId(), tenantId);
     }
 
     @Override

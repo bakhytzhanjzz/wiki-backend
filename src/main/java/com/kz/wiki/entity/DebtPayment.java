@@ -28,8 +28,14 @@ public class DebtPayment extends BaseTenantEntity {
     @Column(name = "payment_method")
     private String paymentMethod;
 
+    @Column(name = "payment_date", nullable = false)
+    private LocalDateTime paymentDate = LocalDateTime.now();
+
+    @Column(name = "user_id")
+    private Long userId;
+
     @Column(columnDefinition = "TEXT")
-    private String note;
+    private String notes;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();

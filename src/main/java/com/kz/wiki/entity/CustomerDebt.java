@@ -17,8 +17,8 @@ public class CustomerDebt extends BaseTenantEntity {
     @Column(name = "customer_id", nullable = false)
     private Long customerId;
 
-    @Column(name = "sale_id", nullable = false)
-    private Long saleId;
+    @Column(name = "sale_id")
+    private Long saleId; // Optional, can be null for manual debts
 
     @Column(nullable = false, precision = 19, scale = 2)
     private BigDecimal amount;
@@ -32,14 +32,32 @@ public class CustomerDebt extends BaseTenantEntity {
     @Column(nullable = false)
     private String status = "unpaid"; // unpaid, paid, partial, overdue
 
+    @Column(name = "issue_date", nullable = false)
+    private LocalDateTime issueDate = LocalDateTime.now();
+
     @Column(name = "due_date")
     private LocalDate dueDate;
+
+    @Column(name = "store_id")
+    private Long storeId;
+
+    @Column(name = "user_id")
+    private Long userId;
+
+    @Column(name = "payment_type")
+    private String paymentType; // cash, card, etc.
+
+    @Column(columnDefinition = "TEXT")
+    private String notes;
 
     @Column(name = "is_overdue")
     private Boolean isOverdue = false;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt = LocalDateTime.now();
 }
 
 

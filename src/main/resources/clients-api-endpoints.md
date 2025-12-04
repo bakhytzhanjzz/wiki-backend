@@ -11,7 +11,7 @@ https://wiki-backend-30t2.onrender.com/api
 
 ---
 
-## 1. Клиенты (Clients)
+## 1. Клиенты (Clients)                                                                                                             
 
 ### 1.1. Получить список клиентов
 ```
@@ -21,8 +21,8 @@ GET /clients
 **Query параметры:**
 - `search` (string, optional) - поиск по ID, имени, телефону
 - `groupIds` (number[], optional) - фильтр по группам (можно передать несколько)
-- `tagIds` (number[], optional) - фильтр по тегам (можно передать несколько)
-- `birthdayFrom` (string, optional) - дата начала дня рождения (YYYY-MM-DD)
+- `tagIds` (number[], optional) - фильтр по тегам (можно передать несколько)                                                                                                                        
+- `birthdayFrom` (string, optional) - дата начала дня рождения (YYYY-MM-DD)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
 - `birthdayTo` (string, optional) - дата окончания дня рождения (YYYY-MM-DD)
 - `purchaseAmountFrom` (number, optional) - минимальная сумма покупок
 - `purchaseAmountTo` (number, optional) - максимальная сумма покупок

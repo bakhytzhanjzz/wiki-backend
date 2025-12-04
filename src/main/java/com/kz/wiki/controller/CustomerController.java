@@ -30,10 +30,16 @@ public class CustomerController {
         String tenantId = SecurityUtil.getCurrentTenantId();
         
         Customer customer = new Customer();
-        customer.setName(request.getName());
+        // Split name if provided, otherwise use as firstName
+        if (request.getName() != null && !request.getName().trim().isEmpty()) {
+            String[] nameParts = request.getName().trim().split("\\s+", 2);
+            customer.setFirstName(nameParts[0]);
+            if (nameParts.length > 1) {
+                customer.setLastName(nameParts[1]);
+            }
+        }
         customer.setPhone(request.getPhone());
         customer.setEmail(request.getEmail());
-        customer.setCardNumber(request.getCardNumber());
         customer.setNotes(request.getNotes());
         
         Customer created = customerService.create(customer, tenantId);
@@ -91,10 +97,16 @@ public class CustomerController {
         String tenantId = SecurityUtil.getCurrentTenantId();
         
         Customer customer = new Customer();
-        customer.setName(request.getName());
+        // Split name if provided, otherwise use as firstName
+        if (request.getName() != null && !request.getName().trim().isEmpty()) {
+            String[] nameParts = request.getName().trim().split("\\s+", 2);
+            customer.setFirstName(nameParts[0]);
+            if (nameParts.length > 1) {
+                customer.setLastName(nameParts[1]);
+            }
+        }
         customer.setPhone(request.getPhone());
         customer.setEmail(request.getEmail());
-        customer.setCardNumber(request.getCardNumber());
         customer.setNotes(request.getNotes());
         
         Customer updated = customerService.update(id, customer, tenantId);

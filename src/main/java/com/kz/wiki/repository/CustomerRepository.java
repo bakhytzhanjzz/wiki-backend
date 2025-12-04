@@ -15,13 +15,13 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     List<Customer> findByTenantId(String tenantId);
     Optional<Customer> findByPhoneAndTenantId(String phone, String tenantId);
     Optional<Customer> findByEmailAndTenantId(String email, String tenantId);
-    Optional<Customer> findByCardNumberAndTenantId(String cardNumber, String tenantId);
     
     @Query("SELECT c FROM Customer c WHERE c.tenantId = :tenantId AND " +
-           "(LOWER(c.name) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
+           "(LOWER(c.firstName) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
+           "LOWER(c.lastName) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
+           "LOWER(c.middleName) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
            "LOWER(c.phone) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
-           "LOWER(c.email) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
-           "LOWER(c.cardNumber) LIKE LOWER(CONCAT('%', :searchTerm, '%')))")
+           "LOWER(c.email) LIKE LOWER(CONCAT('%', :searchTerm, '%')))")
     List<Customer> searchByTenantId(@Param("tenantId") String tenantId, @Param("searchTerm") String searchTerm);
     
     List<Customer> findByTenantIdAndDebtAmountGreaterThan(String tenantId, java.math.BigDecimal zero);
